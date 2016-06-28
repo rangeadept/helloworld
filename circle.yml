@@ -1,7 +1,7 @@
 machine:
   environment:
     PROJECT_NAME: adeptable-prod
-    CLUSTER_NAME: svcprod-alpha
+    CLUSTER_NAME: svcprod-alpha-uc1
     CLOUDSDK_COMPUTE_ZONE: us-central1-a
     DEBIAN_FRONTEND: noninteractive
     APP_NAME: helloworld
