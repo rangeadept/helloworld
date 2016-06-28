@@ -7,7 +7,7 @@ import (
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
     title := r.URL.Path[len("/view/"):]
-    fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", title , "Rangito")
+    fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", title , "Rangito2")
 }
 
 func main() {
