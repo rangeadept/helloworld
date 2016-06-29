@@ -4,9 +4,10 @@ metadata:
   name: $APP_NAME
   labels:
     name: $APP_NAME
+    app: $APP_NAME
 spec:
   ports:
     - port: 8080
       name: http
   selector:
-    name: $APP_NAME
+    app: $APP_NAME
