@@ -19,6 +19,7 @@ sudo /opt/google-cloud-sdk/bin/gcloud config set project $PROJECT_NAME
 sudo /opt/google-cloud-sdk/bin/gcloud --quiet config set container/cluster $CLUSTER_NAME
 sudo /opt/google-cloud-sdk/bin/gcloud config set compute/zone ${CLOUDSDK_COMPUTE_ZONE}
 sudo /opt/google-cloud-sdk/bin/gcloud --quiet container clusters get-credentials $CLUSTER_NAME
+sudo chown -R ubuntu:ubuntu /home/ubuntu/.kube
 
 # Set namespace
 CONTEXT=$(kubectl config view | grep current-context | awk '{print $2}')
