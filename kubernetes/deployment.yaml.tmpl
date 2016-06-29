@@ -11,12 +11,12 @@ spec:
       labels:
         app: $APP_NAME
         track: stable
-        git_commit: $CIRCLE_SHA1
+        git_commit: $SHORT_SHA1
 
     spec:
       containers:
       - name: $APP_NAME
-        image: gcr.io/$PROJECT_NAME/$APP_NAME:$CIRCLE_SHA1
+        image: gcr.io/$PROJECT_NAME/$APP_NAME:$SHORT_SHA1
         ports:
         - containerPort: 8080
         readinessProbe:
