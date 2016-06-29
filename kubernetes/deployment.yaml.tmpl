@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: $APP_NAME
   labels:
+    app: $APP_NAME
     git_commit: $CIRCLE_SHA1
 
 spec:
