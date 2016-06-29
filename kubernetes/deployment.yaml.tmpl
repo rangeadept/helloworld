@@ -2,6 +2,8 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: $APP_NAME
+  labels:
+    git_commit: $CIRCLE_SHA1
 
 spec:
   replicas: 1
@@ -16,3 +18,7 @@ spec:
         image: gcr.io/$PROJECT_NAME/$APP_NAME:$CIRCLE_SHA1
         ports:
         - containerPort: 8080
+      readinessProbe:
+        httpGet:
+          path: /view/health
+          port: 8080
