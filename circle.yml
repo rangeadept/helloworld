@@ -16,7 +16,7 @@ dependencies:
     - _ci-scripts/setup-gke-environment.sh
     - docker build -t gcr.io/${PROJECT_NAME}/${APP_NAME}:${SHORT_SHA1} .
     # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
-    - docker tag gcr.io/${PROJECT_NAME}/${APP_NAME}:${SHORT_SHA1} gcr.io/${PROJECT_NAME}/${APP_NAME}:latest
+    - docker tag -f gcr.io/${PROJECT_NAME}/${APP_NAME}:${SHORT_SHA1} gcr.io/${PROJECT_NAME}/${APP_NAME}:latest
 
 test:
   post:
