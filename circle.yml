@@ -32,4 +32,5 @@ deployment:
       - sudo /opt/google-cloud-sdk/bin/gcloud docker push gcr.io/${PROJECT_NAME}/${APP_NAME}
       - _ci-scripts/set-kube-namespace.sh stage
       - kubectl apply -f ./k8-service.yaml
+      - cat ./k8-deployment.yaml
       - kubectl apply -f ./k8-deployment.yaml
