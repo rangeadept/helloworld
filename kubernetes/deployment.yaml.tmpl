@@ -1,24 +1,43 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: helloworld
+  name: $APP_NAME
+  labels:
+    app: $APP_NAME
+  annotations:
+    git-commit: $CIRCLE_SHA1
 
 spec:
   replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
-      name: helloworld
       labels:
-        app: helloworld
-        track: stable
-
+        app: $APP_NAME
+      annotations:
+        git-commit: $CIRCLE_SHA1
     spec:
       containers:
-        - name: helloworld
-          image: gcr.io/$PROJECT_NAME/$APP_NAME:${CIRCLE_SHA1}
-          ports:
-            - containerPort: 8080
-          readinessProbe:
-            httpGet:
-              path: /view/health
-              port: 8080
+      - image: gcr.io/$PROJECT_NAME/$APP_NAME:$CIRCLE_SHA1
+        imagePullPolicy: Always
+        name: $APP_NAME
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /view/health
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
