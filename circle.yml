@@ -26,22 +26,17 @@ deployment:
   alpha:
     branch: master
     commands:
-      - envsubst < kubernetes/deployment.yaml.tmpl > k8-deployment.yaml
-      - envsubst < kubernetes/service.yaml.tmpl > k8-service.yaml
-      - sudo /opt/google-cloud-sdk/bin/gcloud docker push gcr.io/${PROJECT_NAME}/${APP_NAME}
-      - _ci-scripts/set-kube-namespace.sh test
-      - kubectl apply -f ./k8-service.yaml
-      - cat ./k8-deployment.yaml
-      - kubectl apply -f ./k8-deployment.yaml
+      - _ci-scripts/deploy.sh test
   stage:
     # Release tags only (no -beta or -rc, only v111.111.111 
     tag:
       - /^v[0-9]+\.[0-9]+\.[0-9]+$/
     commands:
-      - envsubst < kubernetes/deployment.yaml.tmpl > k8-deployment.yaml
-      - envsubst < kubernetes/service.yaml.tmpl > k8-service.yaml
-      - sudo /opt/google-cloud-sdk/bin/gcloud docker push gcr.io/${PROJECT_NAME}/${APP_NAME}
-      - _ci-scripts/set-kube-namespace.sh stage
-      - kubectl apply -f ./k8-service.yaml
-      - cat ./k8-deployment.yaml
-      - kubectl apply -f ./k8-deployment.yaml
+      - _ci-scripts/deploy.sh stage
+
+  beta: 
+    # *-beta tags only
+    tag:
+      - /^v[0-9]+\.[0-9]+\.[0-9]+-beta$/
+    commands:
+      - _ci-scripts/deploy.sh beta
