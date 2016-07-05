@@ -23,8 +23,19 @@ test:
     - curl --retry 10 --retry-delay 5 -v http://localhost:8080/view/fun
 
 deployment:
-  stage:
+  alpha:
     branch: master
+    commands:
+      - envsubst < kubernetes/deployment.yaml.tmpl > k8-deployment.yaml
+      - envsubst < kubernetes/service.yaml.tmpl > k8-service.yaml
+      - sudo /opt/google-cloud-sdk/bin/gcloud docker push gcr.io/${PROJECT_NAME}/${APP_NAME}
+      - _ci-scripts/set-kube-namespace.sh test
+      - kubectl apply -f ./k8-service.yaml
+      - cat ./k8-deployment.yaml
+      - kubectl apply -f ./k8-deployment.yaml
+  stage:
+    tag:
+      - /releases\/.*/
     commands:
       - envsubst < kubernetes/deployment.yaml.tmpl > k8-deployment.yaml
       - envsubst < kubernetes/service.yaml.tmpl > k8-service.yaml
