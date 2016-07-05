@@ -34,8 +34,9 @@ deployment:
       - cat ./k8-deployment.yaml
       - kubectl apply -f ./k8-deployment.yaml
   stage:
+    # Release tags only (no -beta or -rc, only v111.111.111 
     tag:
-      - /releases\/.*/
+      - /^v[0-9]+\.[0-9]+\.[0-9]+$/
     commands:
       - envsubst < kubernetes/deployment.yaml.tmpl > k8-deployment.yaml
       - envsubst < kubernetes/service.yaml.tmpl > k8-service.yaml
