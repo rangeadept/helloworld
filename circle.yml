@@ -1,3 +1,4 @@
+# Every commit to everybranch builds, only selected branches deploy
 machine:
   environment:
     PROJECT_NAME: adeptable-prod
@@ -12,10 +13,11 @@ machine:
 dependencies:
   pre:
     - git clone git@github.com:rangeadept/_ci-scripts.git
-    - _ci-scripts/setup-gke-environment.sh
     - docker build -t gcr.io/${PROJECT_NAME}/${APP_NAME}:${CIRCLE_SHA1} .
-    # Using a separate tag command until Docker 1.10 is available on CircleCI, then we can use two tags in the build command above
     - docker tag -f gcr.io/${PROJECT_NAME}/${APP_NAME}:${CIRCLE_SHA1} gcr.io/${PROJECT_NAME}/${APP_NAME}:latest
+
+  post: 
+    - _ci-scripts/setup-gke-environment.sh
 
 test:
   post:
@@ -23,20 +25,19 @@ test:
     - curl --retry 10 --retry-delay 5 -v http://localhost:8080/view/fun
 
 deployment:
-  alpha:
+  integration:
     branch: master
     commands:
-      - _ci-scripts/deploy.sh test
+      - _ci-scripts/deploy.sh test svcdev-alpha-ue1
   stage:
     # Release tags only (no -beta or -rc, only v111.111.111 
     tag:
       - /^v[0-9]+\.[0-9]+\.[0-9]+$/
     commands:
-      - _ci-scripts/deploy.sh stage
-
+      - _ci-scripts/deploy.sh stage svcprod-alpha-uc1
   beta: 
     # *-beta tags only
     tag:
       - /^v[0-9]+\.[0-9]+\.[0-9]+-beta$/
     commands:
-      - _ci-scripts/deploy.sh beta
+      - _ci-scripts/deploy.sh beta svcprod-alpha-uc1
