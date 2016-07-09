@@ -28,7 +28,7 @@ deployment:
   integration:
     branch: master
     commands:
-      - _ci-scripts/deploy.sh test $CLUSTER_NAME
+      - _ci-scripts/deploy.sh integration $CLUSTER_NAME
   stage:
     # Release tags only (no -beta or -rc, only v111.111.111 
     tag:
