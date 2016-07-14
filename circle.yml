@@ -1,9 +1,9 @@
 # Every commit to everybranch builds, only selected branches deploy
 machine:
   environment:
-    PROJECT_NAME: adeptable-prod
-    CLUSTER_NAME: svcprod-alpha-uc1
-    CLUSTER_ZONE: us-central1-a
+    # PROJECT_NAME: set in circleci UI 
+    # CLUSTER_NAME: set in circleci UI 
+    # CLUSTER_ZONE: set in circleci UI 
     DEBIAN_FRONTEND: noninteractive
     APP_NAME: helloworld
 
@@ -24,20 +24,21 @@ test:
     - docker run -d -p 8080:8080 gcr.io/${PROJECT_NAME}/${APP_NAME}:${CIRCLE_SHA1}; sleep 1
     - curl --retry 10 --retry-delay 5 -v http://localhost:8080/view/fun
 
+# This block should be consistent across all branches and services
 deployment:
   integration:
     branch: master
     commands:
-      - _ci-scripts/deploy.sh integration $CLUSTER_NAME
+      - kubernetes/deploy.sh integration 
   stage:
     # Release tags only (no -beta or -rc, only v111.111.111 
     tag:
       - /^v[0-9]+\.[0-9]+\.[0-9]+$/
     commands:
-      - _ci-scripts/deploy.sh stage $CLUSTER_NAME
+      - kubernetes/deploy.sh stage 
   beta: 
     # *-beta tags only
     tag:
       - /^v[0-9]+\.[0-9]+\.[0-9]+-beta$/
     commands:
-      - _ci-scripts/deploy.sh beta $CLUSTER_NAME
+      - kubernetes/deploy.sh beta 
